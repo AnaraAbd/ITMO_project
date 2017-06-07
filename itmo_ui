@@ -1,0 +1,47 @@
+#!/bin/sh
+
+BALANCE="itmo"
+OUTFILE=/tmp/oitmo-$$
+GETTEXT="gettext -d itmo_ui"
+
+# check ability to display
+# ret - return value of DIALOG variable
+set_dialog() {
+    DIALOG=dialog
+    if [ ! -z $DISPLAY ]
+    then
+        which gdialog > /dev/null && DIALOG=gdialog || DIALOG=dialog
+    fi
+
+    echo $DIALOG
+}
+
+ui_main() {
+    NAME="EtherChecker 1.0"
+    DIALOG=$(set_dialog)
+
+    STATUS=$($BALANCE -e)
+    if [[ $STATUS != *"OK" ]];
+    then
+        $DIALOG --title "`$GETTEXT \"Error!\"`" --msgbox "$STATUS" 6 20
+        exit
+    fi
+
+    OPTIONS=($($BALANCE -a))
+
+    while true
+    do
+        $DIALOG --keep-tite --title "$NAME" --menu "`$GETTEXT \"Select account:\"`" 12 76 16 ${OPTIONS[@]} 2> $OUTFILE || end 
+
+        VALUE=$($BALANCE -i $INDEX)
+        
+        INDEX=$(($INDEX+1))
+
+        MSG="`$GETTEXT \"You have on:\"`"
+        MSG+=" ${OPTIONS[$INDEX]}: $VALUE eth. "
+        MSG+="`$GETTEXT \"Do you want to check another wallet?\"`"
+        $DIALOG --title "$NAME" --yesno "$MSG" 10 50 || end
+    done
+}
+
+ui_main
