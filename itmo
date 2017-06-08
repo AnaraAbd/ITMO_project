@@ -5,7 +5,7 @@ PASSWD=$(cat "$pfile")
 
 echo "Ethereum Wallet Transfer"
 
-ETH=$(which geth)  
+ETH=$(which geth &>/dev/null) 
 check_geth() {
     STATUS=""
     if [ -z $ETH ] && [ ! "$(ps -A | grep ether*)" ];  
@@ -20,10 +20,10 @@ check_geth() {
 echo "Transaction"
 
 transaction(){
-	SENDER=$sen
-	RECEIVER=$rec
-	AMOUNT=$amount
-	./geth --exec "personal.unlockAccount('$sen', '$PASSWD')" attach > /dev/null	
+	SENDER=$1
+	RECEIVER=$2
+	AMOUNT=$3
+	./geth --exec "personal.unlockAccount('$SENDER', '$PASSWD')" attach > /dev/null	
 	TRANSACTION=`./geth --testnet --fast -exec "eth.sendTransaction({from: '$SENDER', to: '$RECEIVER', value: web3.toWei('$AMOUNT', 'ether')})" attach`
 	echo $TRANSACTION
 }
@@ -37,34 +37,41 @@ help () {
 
 cli_main(){
 
-if [ ! -z $sen ] && [ $sen = "-h" ];
+if [ ! -z $1 ] && [ $1 = "-h" ];
     then
         help
         exit
 fi
 
 STATUS=$(check_geth)
-    if [[ $STATUS != *"OK" ]] || $([ ! -z $sen ] );
+    if [[ $STATUS != *"OK" ]] || $([ ! -z $1 ] );
     then
         echo $STATUS
         exit 
 fi
 
+if [ ! -z $1 ];
+    then
+        if [ $1 = "-a" ];
+then
+	    TRANSACTION="$(send $2 $3 $4)"
+	    echo $TRANSACTION
+	    exit	
+	fi
+fi
 
 
 while true
 do
-	echo -n "Enter SENDER account:"
+	printf "Enter SENDER account:\n"
 	read SENDER
 	#echo "Your Wallet is: $sen"
 
-	#./geth --testnet --fast -exec "eth.accounts" attach
-
-	echo -n "Enter RECEIVER account:"
+	printf "Enter RECEIVER account:\n"
 	read RECEIVER
 	#echo "Your Wallet is: $rec"
 
-	echo -n "Enter AMOUNT to send:"
+	printf "Enter AMOUNT to send:\n"
 	read AMOUNT
 	#echo "Amount to send is : $amount"
 
@@ -76,6 +83,7 @@ do
 	read ANS
 	if [ $ANS != "Y" ];
         then
+	    echo "" > "$pfile"
             exit
 	fi
 

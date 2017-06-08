@@ -1,19 +1,14 @@
 #!/bin/sh
 
-BALANCE="itmo"
+BALANCE="itmo.sh"
 OUTFILE=/tmp/oitmo-$$
 GETTEXT="gettext -d itmo_ui"
 
 # check ability to display
 # ret - return value of DIALOG variable
 set_dialog() {
-    DIALOG=dialog
-    if [ ! -z $DISPLAY ]
-    then
         which gdialog > /dev/null && DIALOG=gdialog || DIALOG=dialog
-    fi
 
-    echo $DIALOG
 }
 
 ui_main() {
