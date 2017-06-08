@@ -90,17 +90,17 @@ fi
 
 while true
 do
-	printf "Enter SENDER account:\n"
+	printf "Enter sender account:\n"
 	read SENDER
 	#echo "Your Wallet is: $1"
 
-	printf "Enter RECEIVER account:\n"
+	printf "Enter receiver account:\n"
 	read RECEIVER
 	
-	printf "Enter AMOUNT to send:\n"
+	printf "Enter amount to send:\n"
 	read AMOUNT
 	
-	printf "Please enter acoount PASSWD:\n"
+	printf "Please enter acoount password:\n"
 	read -s PASSWD
 
 	TRANSACTION="$(transaction $SENDER $RECEIVER $AMOUNT $PASSWD)"
