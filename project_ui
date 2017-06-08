@@ -9,14 +9,14 @@ echo $DIALOG
 }
 
 ui_main() {
-    NAME="Ether Sender"
+    NAME="Ether"
     DIALOG=$(set_dialog)
 
 
 while true
 do
 
-	STATUS=$(./itmo_tr -s)
+	STATUS=$(./itmo -s)
 	if [[ $STATUS != *"OK" ]];
         then
         echo $STATUS
@@ -35,7 +35,7 @@ do
 	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter the AMOUNT of ethers:\"`" 8 35 2> $TEMPFILE
         AMOUNT=$(cat $TEMPFILE)
 	
-	TRANSACTION=$(./itmo_tr -a $SENDER $RECEIVER $AMOUNT)
+	TRANSACTION=$(./itmo -i $SENDER $RECEIVER $AMOUNT)
 	echo $TRANSACTION
 
 	MSG="`$GETTEXT \"Transaction ID is:\"`"

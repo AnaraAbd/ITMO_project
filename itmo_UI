@@ -23,6 +23,7 @@ do
 	then
 		MSG1="`gettext \"Sender:\"` `echo $SENDER`\\n\\n`gettext \"Continue?\"`"
 		$MSG1 8 35 2>$ITMO
+
 		$DIALOG --yesno "$MSG1" 7 20 || end
 		MSG2="`gettext \"Receiver:\"` `echo $RECEIVER`\\n\\n`gettext \"Continue?\"`"
 		$DIALOG --yesno "$MSG2" 7 20 || end
