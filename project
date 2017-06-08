@@ -100,7 +100,7 @@ do
 	printf "Enter AMOUNT to send:\n"
 	read AMOUNT
 	
-	printf "Please enter your account PASSWORD:\n"
+	printf "Please enter acoount PASSWD:\n"
 	read -s PASSWD
 
 	TRANSACTION="$(transaction $SENDER $RECEIVER $AMOUNT $PASSWD)"

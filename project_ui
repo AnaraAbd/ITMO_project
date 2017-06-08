@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TEMPFILE=/tmp/params-$$
-GETTEXT="gettext -d trial"
+GETTEXT="gettext -d project_ui"
 
 set_dialog(){
 which gdialog 2> /dev/null && DIALOG=gdialog || DIALOG=dialog
@@ -16,7 +16,7 @@ ui_main() {
 while true
 do
 
-	STATUS=$(./itmo -s)
+	STATUS=$(./project -s)
 	if [[ $STATUS != *"OK" ]];
         then
         echo $STATUS
@@ -26,16 +26,19 @@ do
 	
 	
 	
-	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter the account of SENDER:\"`" 8 35 2> $TEMPFILE
+	$DIALOG --title "$NAME" --inputbox "`gettext \"Enter sender account:\"`" 8 35 2> $TEMPFILE
 	SENDER=$(cat $TEMPFILE)
 	
-	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter the account of RECEIVER:\"`" 8 35 2> $TEMPFILE
+	$DIALOG --title "$NAME" --inputbox "`gettext \"Enter receiver account:\"`" 8 35 2> $TEMPFILE
         RECEIVER=$(cat $TEMPFILE)
 
-	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter the AMOUNT of ethers:\"`" 8 35 2> $TEMPFILE
+	$DIALOG --title "$NAME" --inputbox "`gettext \"Enter amount to send:\"`" 8 35 2> $TEMPFILE
         AMOUNT=$(cat $TEMPFILE)
+
+	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter account password:\"`" 8 35 2> $TEMPFILE
+        PASSWD=$(cat $TEMPFILE)
 	
-	TRANSACTION=$(./itmo -i $SENDER $RECEIVER $AMOUNT)
+	TRANSACTION=$(./project -i $SENDER $RECEIVER $AMOUNT $PASSWD)
 	echo $TRANSACTION
 
 	MSG="`$GETTEXT \"Transaction ID is:\"`"
