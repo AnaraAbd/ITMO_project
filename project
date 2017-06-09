@@ -5,7 +5,7 @@
 
 echo "Ethereum Wallet Transfer"
 
-ETH=$(which geth &>/dev/null) 
+ETH=$(which geth 2>/dev/null) 
 check_geth() {
     STATUS=""
     if [ -z $ETH ] && [ ! "$(ps -A | grep ether*)" ];  
@@ -45,9 +45,17 @@ transaction(){
 	RECEIVER=$2
 	AMOUNT=$3
 	PASSWD=$4
-	./geth --exec "personal.unlockAccount('$SENDER', '$PASSWD')" attach > /dev/null	
-	TRANSACTION=`./geth --testnet --fast -exec "eth.sendTransaction({from: '$SENDER', to: '$RECEIVER', value: web3.toWei('$AMOUNT', 'ether')})" attach`
+if [[ -z  $ETH ]];
+    then
+   	./geth --exec "personal.unlockAccount('$SENDER', '$PASSWD')" attach > /dev/null
+        TRANSACTION=`./geth --testnet --fast -exec "eth.sendTransaction({from: '$SENDER', to: '$RECEIVER', value: web3.toWei('$AMOUNT', 'ether')})" attach`
+        echo $TRANSACTION
+
+else
+	$ETH --exec "personal.unlockAccount('$SENDER', '$PASSWD')" attach > /dev/null
+	TRANSACTION=`$ETH --testnet --fast -exec "eth.sendTransaction({from: '$SENDER', to: '$RECEIVER', value: web3.toWei('$AMOUNT', 'ether')})" attach`
 	echo $TRANSACTION
+fi
 }
 
 
@@ -81,8 +89,8 @@ if [ ! "$(ps -A | grep ether*)" ];
 if [ ! -z $1 ];
     then
         if [ $1 = "-i" ];
-then
-	    TRANSACTION="$(transaction $2 $3 $4 )"
+	then
+	    TRANSACTION="$(send $2 $3 $4 $5)"
 	    echo $TRANSACTION
 	    exit	
 	fi
@@ -109,9 +117,12 @@ do
 
 	printf "Do you want make another transaction? (Y/N).\n"
 	read ANS
-	if [ $ANS != "Y" ];
-        then
-            exit
+	if [ ! -z $ANS ]; 
+		then
+		if [$ANS != "Y" ]; 
+        	then
+           exit
+	fi
 	fi
 
 done
