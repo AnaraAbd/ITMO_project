@@ -35,7 +35,7 @@ do
 	
 	
 	
-	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter the account of SENDER:\"`" 8 35 2> $TEMPFILE
+	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter sender account:\"`" 8 35 2> $TEMPFILE
 	return_value=$?
 	case $return_value in
   	$DIALOG_OK)
@@ -45,7 +45,7 @@ do
  	esac
 
 		
-	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter the account of RECEIVER:\"`" 8 35 2> $TEMPFILE
+	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter receiver account:\"`" 8 35 2> $TEMPFILE
         return_value=$?
         case $return_value in
         $DIALOG_OK)
@@ -55,7 +55,7 @@ do
 	esac
 
 
-	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter the AMOUNT of ethers:\"`" 8 35 2> $TEMPFILE
+	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter amount to send:\"`" 8 35 2> $TEMPFILE
 	return_value=$?
         case $return_value in
         $DIALOG_OK)
@@ -65,7 +65,7 @@ do
 	esac
 
         
-	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter the PASSWORD:\"`" 8 35 2> $TEMPFILE
+	$DIALOG --title "$NAME" --inputbox "`gettext \"Please enter password:\"`" 8 35 2> $TEMPFILE
 	return_value=$?
         case $return_value in
         $DIALOG_OK)

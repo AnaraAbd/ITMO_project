@@ -1,10 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
-#pfile="./passwd"
-#PASSWD=$(cat "$pfile")
+#Sending ether form one account to another
 
-echo "Ethereum Wallet Transfer"
 
+#Check geth location
 ETH=$(which geth 2>/dev/null)   
 check_geth() {
     STATUS=""
@@ -40,7 +39,7 @@ run_server() {
 
 
 #Unlock user account and send certain number of 'ether' 
-transaction(){
+send(){
 SENDER=$1
 RECEIVER=$2
 AMOUNT=$3
@@ -88,9 +87,9 @@ if [ ! "$(ps -A | grep ether*)" ];
 
 if [ ! -z $1 ];
     then
-        if [ $1 = "-i" ];
+        if [ $1 = "-a" ];
 	then
-	    TRANSACTION="$(transaction $2 $3 $4 $5)"
+	    TRANSACTION="$(send $2 $3 $4 $5)"
 	    echo $TRANSACTION
 	    exit	
 	fi
@@ -98,28 +97,30 @@ fi
 
 while true
 do
-	printf "Enter sender account:\n"
+	printf "Please enter the account of SENDER:\n"
 	read SENDER
-	#echo "Your Wallet is: $1"
+	
+	printf "Please enter the account of RECEIVER:\n"
+        read RECEIVER
 
-	printf "Enter receiver account:\n"
-	read RECEIVER
-	
-	printf "Enter amount to send:\n"
-	read AMOUNT
-	
-	printf "Please enter acoount password:\n"
+	printf "Please enter the AMOUNT of ethers:\n"
+        read AMOUNT
+
+	printf "Please enter your account PASSWORD:\n"
 	read -s PASSWD
 
-	TRANSACTION="$(transaction $SENDER $RECEIVER $AMOUNT $PASSWD)"
+	printf "Wait..."
+
+	TRANSACTION="$(send $SENDER $RECEIVER $AMOUNT $PASSWD)"
 	echo "Transaction code is:"
 	echo $TRANSACTION
-
+	
+		
 	printf "Do you want make another transaction? (Y/N).\n"
 	read ANS
-	if [ ! -z $ANS ]; 
-		then
-		if [ $ANS != "Y" ]; 
+	if [ ! -z $ANS ];
+    		then
+        	if [ $ANS != "Y" ];
         	then
             exit
 	fi
@@ -131,7 +132,4 @@ done
 
 
 cli_main $*
-
-
- 
 
